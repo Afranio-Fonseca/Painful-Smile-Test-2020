@@ -179,12 +179,20 @@ MonoBehaviour:
   leftTile:
   - {fileID: 4089590861278286049, guid: e99b7adba57e63e468a875d4ece6da70, type: 3}
   - {fileID: 3360054254715864623, guid: 6e56519510f32614a91779c5fb71286e, type: 3}
+  innerTopLeftTile:
+  - {fileID: 1309375546052796225, guid: df434794197b94946a2383b576697767, type: 3}
+  innerTopRightTile:
+  - {fileID: 4001087364758762603, guid: 1b79ad85615fe084da057072b0108d61, type: 3}
+  innerBottomLeftTile:
+  - {fileID: 2491806675663496309, guid: 4c7d739927a229a42bcc78e5b3122c32, type: 3}
+  innerBottomRightTile:
+  - {fileID: 8376081357454116310, guid: 970886032e5114741bba06fba7a44d99, type: 3}
   mapSize: 100
   minIslandWidth: 9
-  maxIslandWidth: 12
+  maxIslandWidth: 15
   minIslandHeight: 9
-  maxIslandHeight: 12
-  islandVariationFrequency: 80
+  maxIslandHeight: 15
+  islandVariationFrequency: 90.1
 --- !u!4 &94130402
 Transform:
   m_ObjectHideFlags: 0
