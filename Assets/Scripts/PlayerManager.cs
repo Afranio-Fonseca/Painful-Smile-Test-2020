@@ -38,9 +38,13 @@ public class PlayerManager : MonoBehaviour
     Transform[] leftCannons = new Transform[3];
     Transform[] rightCannons = new Transform[3];
 
+    public static PlayerManager instance;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (instance) Destroy(this.gameObject);
+        else instance = this;
         frontCannon = transform.Find("Cannons").Find("FrontCannon");
         leftCannons[0] = transform.Find("Cannons").Find("LeftFrontCannon");
         leftCannons[1] = transform.Find("Cannons").Find("LeftCenterCannon");

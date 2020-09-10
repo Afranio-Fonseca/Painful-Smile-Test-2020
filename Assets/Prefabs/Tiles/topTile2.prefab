@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 4582403431011847420}
   - component: {fileID: 7840261045591278515}
   - component: {fileID: 2911555003680070597}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: topTile2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

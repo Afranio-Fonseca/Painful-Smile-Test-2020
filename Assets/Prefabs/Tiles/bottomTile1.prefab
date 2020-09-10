@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 1604893289919601179}
   - component: {fileID: 4501428524976104364}
   - component: {fileID: 7940764013414419731}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: bottomTile1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

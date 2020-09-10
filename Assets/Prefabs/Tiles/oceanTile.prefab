@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3265035928162284633}
   - component: {fileID: 4393046295094854567}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: oceanTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -52,8 +52,17 @@ public class MapGenerator : MonoBehaviour
     [SerializeField]
     int maxIslandHeight;
     [SerializeField]
+    int islandDistance;
+    [SerializeField]
     [Range(0, 100)]
-    float islandVariationFrequency;
+    float islandCurvesFrequency;
+
+    List<GameObject> islandList = new List<GameObject>();
+
+    float maxX = 0;
+    float minX = 0;
+    float maxY = 0;
+    float minY = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -68,13 +77,16 @@ public class MapGenerator : MonoBehaviour
                 Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(-c, -i), Quaternion.identity, ocean);
             }
         }
-        CreateIsland(new Vector3(10, 10));
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        LayerMask lm = LayerMask.GetMask("Island");
+        if (Physics2D.OverlapCircle(PlayerManager.instance.transform.position, islandDistance / 2, lm) == null && !Physics2D.Raycast(PlayerManager.instance.transform.position, PlayerManager.instance.transform.up, islandDistance * 1.5f, lm))
+        {
+            CreateIsland(PlayerManager.instance.transform.position + PlayerManager.instance.transform.up * islandDistance - new Vector3(islandDistance/2, islandDistance/2));
+        }
     }
 
     public void CreateIsland(Vector3 position)
@@ -92,7 +104,7 @@ public class MapGenerator : MonoBehaviour
                 else if (i > 2 && isLand[c, i - 1] && !isLand[c, i - 2] || i > 2 && isLand[c, i - 1] && !isLand[c, i - 3] || i > 2 && isLand[c, i - 1] && i > height - 3 || i == 1 && isLand[c, i - 1] || i == 2 && isLand[c, i - 1]) isLand[c, i] = true;
                 else if (c > width - 3) isLand[c, i] = isLand[c - 1, i];
                 else if (i > height - 3) isLand[c, i] = isLand[c, i - 1];
-                else isLand[c, i] = Random.value * 100 > islandVariationFrequency;
+                else isLand[c, i] = Random.value * 100 > islandCurvesFrequency;
             }
         }
         for (int c = 1; c < width - 1; c++)
@@ -149,6 +161,7 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+        islandList.Add(islandContainer.gameObject);
     }
 }
 

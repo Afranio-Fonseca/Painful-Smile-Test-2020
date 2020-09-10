@@ -390,7 +390,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.55
+  m_LinearDrag: 3
   m_AngularDrag: 30
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -413,10 +413,10 @@ MonoBehaviour:
   cannonball: {fileID: 7040049507633390405, guid: 9ad167eacf6bc65419d6f886e812c79b,
     type: 3}
   maxHealth: 100
-  acceleration: 3
+  acceleration: 60
   deceleration: 1
-  maxSpeed: 5
-  rotationSpeed: 50
+  maxSpeed: 33
+  rotationSpeed: 35
   cannonRange: 5
   cannonballSpeed: 4
   cannonDamage: 100

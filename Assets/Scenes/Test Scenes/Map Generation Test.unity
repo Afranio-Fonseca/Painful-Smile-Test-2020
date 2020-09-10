@@ -192,7 +192,8 @@ MonoBehaviour:
   maxIslandWidth: 15
   minIslandHeight: 9
   maxIslandHeight: 15
-  islandVariationFrequency: 90.1
+  islandDistance: 15
+  islandCurvesFrequency: 60
 --- !u!4 &94130402
 Transform:
   m_ObjectHideFlags: 0
@@ -335,7 +336,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1173839941}
   smoothSpeed: 1
-  frontalOffset: 3
+  frontalOffset: 1
 --- !u!4 &1173839941 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4284844005800150470, guid: 21974a861d6078142a8db7e672b3e202,
