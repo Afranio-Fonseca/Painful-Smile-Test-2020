@@ -63,13 +63,12 @@ public class MapGenerator : MonoBehaviour
             for(int i = 0; i < mapSize; i++)
             {
                 Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(c, i), Quaternion.identity, ocean);
+                Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(-c, i), Quaternion.identity, ocean);
+                Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(c, -i), Quaternion.identity, ocean);
+                Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(-c, -i), Quaternion.identity, ocean);
             }
         }
-        CreateIsland(Vector3.zero);
-        CreateIsland(Vector3.zero + new Vector3(10, 10));
-        CreateIsland(Vector3.zero + new Vector3(10, -10));
-        CreateIsland(Vector3.zero + new Vector3(-10, 10));
-        CreateIsland(Vector3.zero + new Vector3(-10, -10));
+        CreateIsland(new Vector3(10, 10));
     }
 
     // Update is called once per frame
