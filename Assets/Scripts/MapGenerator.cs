@@ -6,68 +6,72 @@ public class MapGenerator : MonoBehaviour
 {
     [Header("Object containers")]
     [SerializeField]
-    Transform ocean;
+    Transform ocean = null;
     [SerializeField]
-    Transform land;
+    Transform land = null;
 
     [Header("Tile Sprites")]
     [SerializeField]
-    GameObject[] oceanTile;
+    GameObject[] oceanTile = null;
     [SerializeField]
-    GameObject[] middleTile;
+    GameObject[] middleTile = null;
     [SerializeField]
-    GameObject[] topLeftTile;
+    GameObject[] topLeftTile = null;
     [SerializeField]
-    GameObject[] topTile;
+    GameObject[] topTile = null;
     [SerializeField]
-    GameObject[] topRightTile;
+    GameObject[] topRightTile = null;
     [SerializeField]
-    GameObject[] rightTile;
+    GameObject[] rightTile = null;
     [SerializeField]
-    GameObject[] bottomRightTile;
+    GameObject[] bottomRightTile = null;
     [SerializeField]
-    GameObject[] bottomTile;
+    GameObject[] bottomTile = null;
     [SerializeField]
-    GameObject[] bottomLeftTile;
+    GameObject[] bottomLeftTile = null;
     [SerializeField]
-    GameObject[] leftTile;
+    GameObject[] leftTile = null;
     [SerializeField]
-    GameObject[] innerTopLeftTile;
+    GameObject[] innerTopLeftTile = null;
     [SerializeField]
-    GameObject[] innerTopRightTile;
+    GameObject[] innerTopRightTile = null;
     [SerializeField]
-    GameObject[] innerBottomLeftTile;
+    GameObject[] innerBottomLeftTile = null;
     [SerializeField]
-    GameObject[] innerBottomRightTile;
+    GameObject[] innerBottomRightTile = null;
 
     [Header("Settings")]
     [SerializeField]
-    int mapSize;
+    int mapSize = 300;
     [SerializeField]
-    int minIslandWidth;
+    int minIslandWidth = 5;
     [SerializeField]
-    int maxIslandWidth;
+    int maxIslandWidth = 15;
     [SerializeField]
-    int minIslandHeight;
+    int minIslandHeight = 5;
     [SerializeField]
-    int maxIslandHeight;
+    int maxIslandHeight = 15;
     [SerializeField]
-    int islandDistance;
+    int islandDistance = 15;
+    [SerializeField]
+    float islandCheckInterval = 0.2f;
     [SerializeField]
     [Range(0, 100)]
-    float islandCurvesFrequency;
+    float islandCurvesFrequency = 50;
 
     List<GameObject> islandList = new List<GameObject>();
 
-    float maxX = 0;
-    float minX = 0;
-    float maxY = 0;
-    float minY = 0;
+    float timeSinceLastCheck = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        for(int c = 0; c < mapSize; c++)
+        if(islandDistance < maxIslandWidth || islandDistance < maxIslandHeight)
+        {
+            Debug.LogWarning("Island distance can't be lower than the max island size, setting it to highest value of island size.");
+            islandDistance = Mathf.Max(maxIslandHeight, maxIslandWidth);
+        }
+        for (int c = 0; c < mapSize; c++)
         {
             for(int i = 0; i < mapSize; i++)
             {
@@ -82,16 +86,22 @@ public class MapGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        LayerMask lm = LayerMask.GetMask("Island");
-        if (Physics2D.OverlapCircle(PlayerManager.instance.transform.position, islandDistance / 2, lm) == null && !Physics2D.Raycast(PlayerManager.instance.transform.position, PlayerManager.instance.transform.up, islandDistance * 1.5f, lm))
+        timeSinceLastCheck += Time.deltaTime;
+        if(timeSinceLastCheck >= islandCheckInterval)
         {
-            CreateIsland(PlayerManager.instance.transform.position + PlayerManager.instance.transform.up * islandDistance - new Vector3(islandDistance/2, islandDistance/2));
+            LayerMask lm = LayerMask.GetMask("Island");
+            Vector3 spawnPoint = PlayerManager.instance.transform.position + PlayerManager.instance.transform.up * islandDistance - new Vector3(islandDistance / 2, islandDistance / 2);
+            if (Physics2D.OverlapCircle(PlayerManager.instance.transform.position, islandDistance / 2, lm) == null && !Physics2D.OverlapArea(spawnPoint, spawnPoint + new Vector3(maxIslandWidth, maxIslandHeight), lm))
+            {
+                CreateIsland(PlayerManager.instance.transform.position + PlayerManager.instance.transform.up * islandDistance - new Vector3(islandDistance / 2, islandDistance / 2));
+            }
+            timeSinceLastCheck = 0;
         }
     }
 
     public void CreateIsland(Vector3 position)
     {
-        Transform islandContainer = Instantiate(new GameObject("island")).GetComponent<Transform>();
+        Transform islandContainer = Instantiate(new GameObject("island"), land).GetComponent<Transform>();
         int width = Random.Range(minIslandWidth, maxIslandWidth);
         int height = Random.Range(minIslandHeight, maxIslandHeight);
         bool[,] isLand = new bool[width,height];

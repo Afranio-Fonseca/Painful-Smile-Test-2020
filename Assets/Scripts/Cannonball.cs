@@ -10,8 +10,11 @@ public class Cannonball : MonoBehaviour
     public float range;
     [System.NonSerialized]
     public int damage;
+    [System.NonSerialized]
+    public ShipBehaviour owner;
     Vector3 startPosition;
     float distanceTraveled = 0;
+    bool registeredHit = false;
 
     // Start is called before the first frame update
     void Start()
@@ -22,22 +25,20 @@ public class Cannonball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(new Vector3(0, speed * Time.deltaTime, 0));
-        distanceTraveled += Time.deltaTime * speed;
-        if (distanceTraveled > range)
-            Destroy(this.gameObject);
+        if(!registeredHit)
+        {
+            transform.Translate(new Vector3(0, speed * Time.deltaTime, 0));
+            distanceTraveled += Time.deltaTime * speed;
+            if (distanceTraveled > range)
+                Destroy(this.gameObject);
+        }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        GetComponent<Animator>().Play("Explosion");
-        if(collision.gameObject.tag == "Enemy")
-        {
-
-        }
-        else if (collision.gameObject.tag == "Player")
-        {
-
+        ShipBehaviour ship = col.gameObject.GetComponent<ShipBehaviour>();
+        if (ship != null && !ship == owner) {
+            ship.ReceiveDamage(damage);
         }
     }
 

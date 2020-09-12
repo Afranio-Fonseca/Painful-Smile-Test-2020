@@ -8,7 +8,7 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField]
     float smoothSpeed = 1;
     [SerializeField]
-    float frontalOffset;
+    float frontalOffset = 1;
 
     // Update is called once per frame
     void LateUpdate()

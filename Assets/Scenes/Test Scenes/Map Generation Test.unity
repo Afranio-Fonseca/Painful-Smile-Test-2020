@@ -193,6 +193,7 @@ MonoBehaviour:
   minIslandHeight: 9
   maxIslandHeight: 15
   islandDistance: 15
+  islandCheckInterval: 0
   islandCurvesFrequency: 60
 --- !u!4 &94130402
 Transform:
@@ -335,7 +336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1173839941}
-  smoothSpeed: 1
+  smoothSpeed: 3
   frontalOffset: 1
 --- !u!4 &1173839941 stripped
 Transform:
@@ -380,6 +381,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4284844005800150466, guid: 21974a861d6078142a8db7e672b3e202,
+        type: 3}
+      propertyPath: acceleration
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 4284844005800150466, guid: 21974a861d6078142a8db7e672b3e202,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 4284844005800150467, guid: 21974a861d6078142a8db7e672b3e202,
         type: 3}
       propertyPath: m_Name
