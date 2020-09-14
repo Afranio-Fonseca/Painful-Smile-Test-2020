@@ -29,15 +29,15 @@ public class PlayerManager : ShipBehaviour
             Rotate(-Input.GetAxis("Horizontal"));
         }
         // Player inputs
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButton("FireFront"))
         {
             FireFrontCannon();
         }
-        if (Input.GetButton("Fire2"))
+        if (Input.GetButton("FireLeft"))
         {
             FireLeftCannons();
         }
-        if (Input.GetButton("Fire3"))
+        if (Input.GetButton("FireRight"))
         {
             FireRightCannons();
         }

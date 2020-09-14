@@ -420,7 +420,7 @@ MonoBehaviour:
   maxSpeed: 12
   rotationSpeed: 35
   cannonRange: 5
-  cannonballSpeed: 4
+  cannonballSpeed: 5.5
   cannonDamage: 10
   cannonCooldownTime: 1
   timeActiveAfterDeath: 2
