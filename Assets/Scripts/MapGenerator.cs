@@ -6,13 +6,9 @@ public class MapGenerator : MonoBehaviour
 {
     [Header("Object containers")]
     [SerializeField]
-    Transform ocean = null;
-    [SerializeField]
     Transform land = null;
 
     [Header("Tile Sprites")]
-    [SerializeField]
-    GameObject[] oceanTile = null;
     [SerializeField]
     GameObject[] middleTile = null;
     [SerializeField]
@@ -50,8 +46,6 @@ public class MapGenerator : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    int mapSize = 300;
-    [SerializeField]
     int minIslandWidth = 5;
     [SerializeField]
     int maxIslandWidth = 15;
@@ -86,23 +80,13 @@ public class MapGenerator : MonoBehaviour
             Debug.LogWarning("Island distance can't be lower than the max island size, setting it to highest value of island size.");
             islandDistance = Mathf.Max(maxIslandHeight, maxIslandWidth);
         }
-        for (int c = 0; c < mapSize; c++)
-        {
-            for(int i = 0; i < mapSize; i++)
-            {
-                Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(c, i), Quaternion.identity, ocean);
-                Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(-c, i), Quaternion.identity, ocean);
-                Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(c, -i), Quaternion.identity, ocean);
-                Instantiate(oceanTile[Random.Range(0, oceanTile.Length)], new Vector3(-c, -i), Quaternion.identity, ocean);
-            }
-        }
     }
 
     // Update is called once per frame
     void Update()
     {
         timeSinceLastCheck += Time.deltaTime;
-        if(timeSinceLastCheck >= islandCheckInterval)
+        if(timeSinceLastCheck >= islandCheckInterval && PlayerManager.instance != null)
         {
             LayerMask lm = LayerMask.GetMask("Island");
             Vector3 spawnPoint = PlayerManager.instance.transform.position + PlayerManager.instance.transform.up * islandDistance - new Vector3(islandDistance / 2, islandDistance / 2);

@@ -8,8 +8,7 @@ public class ShipBehaviour : MonoBehaviour
 
     [Header("Prefab Association")]
     public Cannonball cannonball;
-
-    [Header("UI Elements")]
+    public HealthBarBehaviour healthBar;
 
     [Header("Settings")]
     public int maxHealth;
@@ -20,6 +19,7 @@ public class ShipBehaviour : MonoBehaviour
     public float cannonballSpeed;
     public int cannonDamage;
     public float cannonCooldownTime;
+    public float timeActiveAfterDeath;
 
     [System.NonSerialized]
     public int health;
@@ -38,11 +38,7 @@ public class ShipBehaviour : MonoBehaviour
     [System.NonSerialized]
     public Transform[] rightCannons = new Transform[3];
 
-    
-    [SerializeField]
-    Slider hpSlider = null;
-    [SerializeField]
-    Image sliderImage = null;
+    HealthBarBehaviour healthBarInstance;
 
     // Start is called before the first frame update
     public void Start()
@@ -55,6 +51,9 @@ public class ShipBehaviour : MonoBehaviour
         rightCannons[1] = transform.Find("Cannons").Find("RightCenterCannon");
         rightCannons[2] = transform.Find("Cannons").Find("RightBackCannon");
         health = maxHealth;
+        healthBarInstance = Instantiate(healthBar);
+        healthBarInstance.owner = transform;
+        healthBarInstance.hpSlider.value = 1;
     }
 
     // Update is called once per frame
@@ -62,14 +61,14 @@ public class ShipBehaviour : MonoBehaviour
     {
 
     }
-
     public void ReceiveDamage(int damage, ShipBehaviour origin)
     {
+        if (health <= 0) return;
         health = Mathf.Max(0, health - damage);
         if (health > 0)
         {
             float percentHp = (float)health / maxHealth;
-            hpSlider.value = percentHp;
+            healthBarInstance.hpSlider.value = percentHp;
             float red, green;
             if (percentHp < 0.5f)
             {
@@ -81,9 +80,22 @@ public class ShipBehaviour : MonoBehaviour
                 red = 255f - ((percentHp - 0.5f) * 510f);
                 green = 255f;
             }
-            sliderImage.color = new Color(red / 255f, green / 255f, 0, 255f);
+            healthBarInstance.sliderImage.color = new Color(red / 255f, green / 255f, 0, 255f);
         }
-        if (health <= 0) sliderImage.color = new Color(0, 0, 0, 0);
+        GetComponent<Animator>().SetInteger("hp", health);
+        if (health <= 0)
+        {
+            healthBarInstance.sliderImage.color = new Color(0, 0, 0, 0);
+            Destroy(healthBarInstance.gameObject);
+            GameManager.instance.ShipDestroyed(this, origin);
+            StartCoroutine(Explode());
+        }
+    }
+
+    IEnumerator Explode()
+    {
+        yield return new WaitForSeconds(timeActiveAfterDeath);
+        GetComponent<Animator>().SetTrigger("Explode");
     }
 
     public void FireFrontCannon()
@@ -156,5 +168,10 @@ public class ShipBehaviour : MonoBehaviour
     public void Rotate(float rotationAngle)
     {
         transform.Rotate(new Vector3(0, 0, rotationSpeed * Time.deltaTime * GetComponent<Rigidbody2D>().velocity.magnitude * rotationAngle));
+    }
+
+    public void FinishObject()
+    {
+        Destroy(this.gameObject);
     }
 }

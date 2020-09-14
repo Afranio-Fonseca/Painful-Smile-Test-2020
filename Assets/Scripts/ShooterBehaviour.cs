@@ -13,6 +13,7 @@ public class ShooterBehaviour : ShipBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (health <= 0) return;
         LayerMask playerLayer = LayerMask.GetMask("Player");
         LayerMask islandLayer = LayerMask.GetMask("Island");
         if (Physics2D.OverlapCircle(transform.position, sightRange, playerLayer) != null)

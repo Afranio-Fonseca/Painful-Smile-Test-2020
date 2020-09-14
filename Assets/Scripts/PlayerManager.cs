@@ -18,6 +18,7 @@ public class PlayerManager : ShipBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (health <= 0) return;
         // Player movement
         if(Input.GetAxis("Vertical") > 0.2f)
         {

@@ -13,6 +13,7 @@ public class ChaserBehaviour : ShipBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (health <= 0) return;
         LayerMask playerLayer = LayerMask.GetMask("Player");
         LayerMask islandLayer = LayerMask.GetMask("Island");
         if (Physics2D.OverlapCircle(transform.position, sightRange, playerLayer) != null)
@@ -47,7 +48,7 @@ public class ChaserBehaviour : ShipBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ShipBehaviour sb = collision.gameObject.GetComponent<ShipBehaviour>();
-        if(sb != null)
+        if(sb != null && health > 0)
         {
             sb.ReceiveDamage(crashDamage, this);
         }
