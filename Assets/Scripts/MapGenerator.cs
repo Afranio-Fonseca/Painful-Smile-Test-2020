@@ -40,6 +40,14 @@ public class MapGenerator : MonoBehaviour
     [SerializeField]
     GameObject[] innerBottomRightTile = null;
 
+    /*
+    [Header("Enemy prefabs")]
+    [SerializeField]
+    GameObject chaser = null;
+    [SerializeField]
+    GameObject shooter = null;
+    */
+
     [Header("Settings")]
     [SerializeField]
     int mapSize = 300;
@@ -55,6 +63,13 @@ public class MapGenerator : MonoBehaviour
     int islandDistance = 15;
     [SerializeField]
     float islandCheckInterval = 0.2f;
+
+    /*
+    [SerializeField]
+    int minEnemiesPerIsland = 6;
+    [SerializeField]
+    int maxEnemiesPerIsland = 8;
+    */
     [SerializeField]
     [Range(0, 100)]
     float islandCurvesFrequency = 50;
@@ -93,7 +108,8 @@ public class MapGenerator : MonoBehaviour
             Vector3 spawnPoint = PlayerManager.instance.transform.position + PlayerManager.instance.transform.up * islandDistance - new Vector3(islandDistance / 2, islandDistance / 2);
             if (Physics2D.OverlapCircle(PlayerManager.instance.transform.position, islandDistance / 2, lm) == null && !Physics2D.OverlapArea(spawnPoint, spawnPoint + new Vector3(maxIslandWidth, maxIslandHeight), lm))
             {
-                CreateIsland(PlayerManager.instance.transform.position + PlayerManager.instance.transform.up * islandDistance - new Vector3(islandDistance / 2, islandDistance / 2));
+                Vector3 islandPosition = PlayerManager.instance.transform.position + PlayerManager.instance.transform.up * islandDistance - new Vector3(islandDistance / 2, islandDistance / 2);
+                CreateIsland(islandPosition);
             }
             timeSinceLastCheck = 0;
         }
@@ -172,16 +188,30 @@ public class MapGenerator : MonoBehaviour
             }
         }
         islandList.Add(islandContainer.gameObject);
+
+
+        /*
+        int enemiesPerIsland = Random.Range(minEnemiesPerIsland, maxEnemiesPerIsland);
+        for (int c = 0; c < enemiesPerIsland; c++)
+        {
+            GameObject enemy = Random.value > 0.5f ? chaser : shooter;
+            int side = Random.Range(0, 3);
+            switch (side)
+            {
+                case 0:
+                    Instantiate(enemy, position + new Vector3(Random.value * width, height + 2), Quaternion.identity);
+                    break;
+                case 1:
+                    Instantiate(enemy, position + new Vector3(width + 2, Random.value * height), Quaternion.Euler(0, 0, 270));
+                    break;
+                case 2:
+                    Instantiate(enemy, position + new Vector3(Random.value * width, -2), Quaternion.Euler(0, 0, 180));
+                    break;
+                case 3:
+                    Instantiate(enemy, position + new Vector3(-2, Random.value * height), Quaternion.Euler(0, 0, 90));
+                    break;
+            }
+        }
+        */
     }
 }
-
-/* if(c == 0 && i == 0)
-                        Instantiate(topLeftTile[Random.Range(0, topLeftTile.Length)], new Vector3(c, i) + position, Quaternion.identity, land);
-                    else if (c == 0 && !isLand[c, i - 1])
-                        Instantiate(topLeftTile[Random.Range(0, topLeftTile.Length)], new Vector3(c, i) + position, Quaternion.identity, land);
-                    else if (i == 0 && !isLand[c - 1, i])
-                        Instantiate(topLeftTile[Random.Range(0, topLeftTile.Length)], new Vector3(c, i) + position, Quaternion.identity, land);
-                    else if(i > 0 && c > 0 && !isLand[c - 1, i] && !isLand[c, i - 1])
-                        Instantiate(topLeftTile[Random.Range(0, topLeftTile.Length)], new Vector3(c, i) + position, Quaternion.identity, land);
-                        */
-                    

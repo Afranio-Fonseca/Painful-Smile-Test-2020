@@ -19,28 +19,24 @@ public class PlayerManager : ShipBehaviour
     void Update()
     {
         // Player movement
-        if(Input.GetAxis("Vertical") > 0.4)
+        if(Input.GetAxis("Vertical") > 0.2f)
         {
-            GetComponent<Rigidbody2D>().AddForce(transform.up * acceleration);
-            if(GetComponent<Rigidbody2D>().velocity.magnitude > maxSpeed)
-            {
-                GetComponent<Rigidbody2D>().AddForce(new Vector3(0, speed - GetComponent<Rigidbody2D>().velocity.magnitude, 0));
-            }
+            MoveForward();
         }
         if(Mathf.Abs(Input.GetAxis("Horizontal")) > 0.2f)
         {
-            transform.Rotate(new Vector3(0, 0, rotationSpeed * Time.deltaTime * GetComponent<Rigidbody2D>().velocity.magnitude * -Input.GetAxis("Horizontal")));
+            Rotate(-Input.GetAxis("Horizontal"));
         }
         // Player inputs
-        if (Input.GetButton("Fire1") && frontCannonActive)
+        if (Input.GetButton("Fire1"))
         {
             FireFrontCannon();
         }
-        if (Input.GetButton("Fire2") && leftCannonActive)
+        if (Input.GetButton("Fire2"))
         {
             FireLeftCannons();
         }
-        if (Input.GetButton("Fire3") && rightCannonActive)
+        if (Input.GetButton("Fire3"))
         {
             FireRightCannons();
         }

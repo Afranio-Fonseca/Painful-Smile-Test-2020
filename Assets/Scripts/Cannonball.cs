@@ -37,8 +37,11 @@ public class Cannonball : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         ShipBehaviour ship = col.gameObject.GetComponent<ShipBehaviour>();
-        if (ship != null && !ship == owner) {
-            ship.ReceiveDamage(damage);
+        if (ship != null && ship != owner) {
+            registeredHit = true;
+            ship.ReceiveDamage(damage, owner);
+            GetComponent<Animator>().SetTrigger("Explode");
+            GetComponent<Collider2D>().enabled = false;
         }
     }
 

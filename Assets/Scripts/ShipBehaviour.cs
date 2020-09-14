@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShipBehaviour : MonoBehaviour
 {
 
     [Header("Prefab Association")]
     public Cannonball cannonball;
+
+    [Header("UI Elements")]
 
     [Header("Settings")]
     public int maxHealth;
@@ -20,6 +23,7 @@ public class ShipBehaviour : MonoBehaviour
 
     [System.NonSerialized]
     public int health;
+    [System.NonSerialized]
     public float speed;
     [System.NonSerialized]
     public bool frontCannonActive = true;
@@ -34,6 +38,12 @@ public class ShipBehaviour : MonoBehaviour
     [System.NonSerialized]
     public Transform[] rightCannons = new Transform[3];
 
+    
+    [SerializeField]
+    Slider hpSlider = null;
+    [SerializeField]
+    Image sliderImage = null;
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -44,6 +54,7 @@ public class ShipBehaviour : MonoBehaviour
         rightCannons[0] = transform.Find("Cannons").Find("RightFrontCannon");
         rightCannons[1] = transform.Find("Cannons").Find("RightCenterCannon");
         rightCannons[2] = transform.Find("Cannons").Find("RightBackCannon");
+        health = maxHealth;
     }
 
     // Update is called once per frame
@@ -52,57 +63,67 @@ public class ShipBehaviour : MonoBehaviour
 
     }
 
-    public void ReceiveDamage(int damage)
+    public void ReceiveDamage(int damage, ShipBehaviour origin)
     {
         health = Mathf.Max(0, health - damage);
+        if (health > 0)
+        {
+            float percentHp = (float)health / maxHealth;
+            hpSlider.value = percentHp;
+            float red, green;
+            if (percentHp < 0.5f)
+            {
+                red = 255f;
+                green = 255f - ((0.5f - percentHp) * 510f);
+            }
+            else
+            {
+                red = 255f - ((percentHp - 0.5f) * 510f);
+                green = 255f;
+            }
+            sliderImage.color = new Color(red / 255f, green / 255f, 0, 255f);
+        }
+        if (health <= 0) sliderImage.color = new Color(0, 0, 0, 0);
     }
 
     public void FireFrontCannon()
     {
+        if (!frontCannonActive) return;
         frontCannonActive = false;
         StartCoroutine(FrontCannonCooldown());
-        Cannonball cb = Instantiate(cannonball, frontCannon.position, frontCannon.rotation);
-        cb.speed = cannonballSpeed;
-        cb.range = cannonRange;
-        cb.damage = cannonDamage;
+        FireCannon(frontCannon);
     }
 
     public void FireLeftCannons()
     {
+        if (!leftCannonActive) return;
         leftCannonActive = false;
         StartCoroutine(LeftCannonCooldown());
-        Cannonball cb;
-        cb = Instantiate(cannonball, leftCannons[0].position, leftCannons[0].rotation);
-        cb.speed = cannonballSpeed;
-        cb.range = cannonRange;
-        cb.damage = cannonDamage;
-        cb = Instantiate(cannonball, leftCannons[1].position, leftCannons[1].rotation);
-        cb.speed = cannonballSpeed;
-        cb.range = cannonRange;
-        cb.damage = cannonDamage;
-        cb = Instantiate(cannonball, leftCannons[2].position, leftCannons[2].rotation);
-        cb.speed = cannonballSpeed;
-        cb.range = cannonRange;
-        cb.damage = cannonDamage;
+        foreach (Transform cannon in leftCannons)
+        {
+            FireCannon(cannon);
+        }
     }
 
     public void FireRightCannons()
     {
+        if (!rightCannonActive) return;
         rightCannonActive = false;
         StartCoroutine(RightCannonCooldown());
+        foreach(Transform cannon in rightCannons)
+        {
+            FireCannon(cannon);
+        }
+    }
+
+    void FireCannon(Transform cannon)
+    {
         Cannonball cb;
-        cb = Instantiate(cannonball, rightCannons[0].position, rightCannons[0].rotation);
+        cb = Instantiate(cannonball, cannon.position, cannon.rotation);
         cb.speed = cannonballSpeed;
         cb.range = cannonRange;
         cb.damage = cannonDamage;
-        cb = Instantiate(cannonball, rightCannons[1].position, rightCannons[1].rotation);
-        cb.speed = cannonballSpeed;
-        cb.range = cannonRange;
-        cb.damage = cannonDamage;
-        cb = Instantiate(cannonball, rightCannons[2].position, rightCannons[2].rotation);
-        cb.speed = cannonballSpeed;
-        cb.range = cannonRange;
-        cb.damage = cannonDamage;
+        cb.owner = this;
     }
 
     IEnumerator FrontCannonCooldown()
@@ -121,5 +142,19 @@ public class ShipBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(cannonCooldownTime);
         rightCannonActive = true;
+    }
+
+    public void MoveForward()
+    {
+        GetComponent<Rigidbody2D>().AddForce(transform.up * acceleration);
+        if (GetComponent<Rigidbody2D>().velocity.magnitude > maxSpeed)
+        {
+            GetComponent<Rigidbody2D>().AddForce(new Vector3(0, speed - GetComponent<Rigidbody2D>().velocity.magnitude, 0));
+        }
+    }
+
+    public void Rotate(float rotationAngle)
+    {
+        transform.Rotate(new Vector3(0, 0, rotationSpeed * Time.deltaTime * GetComponent<Rigidbody2D>().velocity.magnitude * rotationAngle));
     }
 }
